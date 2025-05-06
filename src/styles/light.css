@@ -1,0 +1,19 @@
+:root {
+  color-scheme: light;
+
+  --primary-color: #2c5c97;
+
+  --content-bg: #fdfdfd;
+  --bg-0: #e5e5e5;
+  --bg-1: #f7f7f7;
+
+  --misc-button-icon-color: #505050;
+  --misc-button-bg: rgba(0, 0, 0, 0.1);
+  --misc-button-hover-bg: rgba(0, 0, 0, 0.2);
+  --misc-button-active-bg: #585858;
+  --misc-button-active-color: #f7f7f7;
+
+  --tooltip-color: #f7f7f7;
+  --tooltip-bg: rgba(0, 0, 0, 0.8);
+  --tooltip-border-color: hsla(0, 0%, 100%, 0.1);
+}

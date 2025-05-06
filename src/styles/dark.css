@@ -1,0 +1,19 @@
+:root:where([data-theme="dark"]) {
+  color-scheme: dark;
+
+  --primary-color: #1a2c42;
+
+  --content-bg: #232323;
+  --bg-0: #191919;
+  --bg-1: #1e1e1e;
+
+  --misc-button-icon-color: #a7a7a7;
+  --misc-button-bg: hsla(0, 0%, 78%, 0.08);
+  --misc-button-hover-bg: hsla(0, 0%, 78%, 0.15);
+  --misc-button-active-bg: #7d7d7d;
+  --misc-button-active-color: #0e0e0e;
+
+  --tooltip-color: #181818;
+  --tooltip-bg: hsla(0, 0%, 78%, 0.9);
+  --tooltip-border-color: rgba(0, 0, 0, 0.1);
+}
