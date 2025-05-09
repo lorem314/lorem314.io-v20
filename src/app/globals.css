@@ -13,6 +13,7 @@
 
 @theme inline {
   --color-primary-color: var(--primary-color);
+  --color-link-color: var(--link-color);
 
   --color-content-bg: var(--content-bg);
   --color-bg-0: var(--bg-0);
@@ -40,8 +41,13 @@
     text-underline-offset: 0.25rem;
   }
   button {
-    cursor: pointer;
+    @apply cursor-pointer;
   }
+
+  /* input[type="text"],
+  input[type="search"] {
+  } */
+
   svg {
     display: block;
   }
@@ -49,10 +55,10 @@
 
 @layer components {
   .page-content {
-    @apply bg-content-bg p-2.5 shadow transition-colors;
+    @apply bg-content-bg rounded p-2.5 shadow transition-colors;
   }
   .content-title {
-    @apply border-b;
+    @apply mb-2.5 border-b border-neutral-400 pb-1 text-lg font-bold;
   }
   .misc-button {
     --svg-icon-size: 1.125em;

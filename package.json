@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "codehike": "^1.0.6",
     "contentlayer2": "^0.5.7",

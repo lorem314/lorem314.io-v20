@@ -16,7 +16,7 @@ const Search = () => {
           "bg-black/10 dark:bg-white/10",
           "hover:bg-black/20 dark:hover:bg-white/20",
           "active:bg-black/30 dark:active:bg-white/30",
-          "sm:basis-md sm:rounded-full sm:px-2.5 sm:py-1.5 sm:text-sm",
+          "sm:basis-md sm:rounded-full sm:px-2.5 sm:py-1 sm:text-sm",
         )}
       >
         <IoMdSearch />

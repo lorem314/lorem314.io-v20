@@ -2,8 +2,10 @@
   color-scheme: dark;
 
   --primary-color: #1a2c42;
+  --link-color: #ffa7c4;
 
   --content-bg: #232323;
+  /* --content-bg: #121212; */
   --bg-0: #191919;
   --bg-1: #1e1e1e;
 

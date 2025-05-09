@@ -1,6 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
+import { useEffect } from "react"
+import { AiOutlineTags } from "react-icons/ai"
+import { VscListTree } from "react-icons/vsc"
 
 import Header from "./Header"
 import Sidebar from "./Sidebar"
@@ -10,7 +13,8 @@ import useDrawer from "@/hooks/useDrawer"
 import useLocalStorage from "@/hooks/useLocalStorage"
 import GlobalContext from "./GlobalContext"
 
-import { PreferredTheme } from "@/types"
+import type { PreferredTheme } from "@/types"
+import type { IconType } from "react-icons"
 
 export default function Layout({
   children,
@@ -18,6 +22,7 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   const isClient = useClient()
+  const pathname = usePathname()
 
   const [preferredTheme, setPreferredTheme] = useLocalStorage<PreferredTheme>(
     "preferred-theme",
@@ -36,7 +41,20 @@ export default function Layout({
   const showLeftDrawerOpener =
     isLeftDrawerAlwaysCollapsed || isLeftDrawerCollapsed
 
-  // theme effect
+  const isRightDrawerAlwaysCollapsed = false
+  const rightDrawerProps = getRightDrawerProps(pathname)
+  const {
+    isCollapsed: isRightDrawerCollapsed,
+    isOpen: isRightDrawerOpen,
+    handler: rightDrawerHandler,
+  } = useDrawer({
+    isAlwaysCollapsed: isRightDrawerAlwaysCollapsed,
+    mediaQuery: rightDrawerProps.mediaQuery,
+  })
+  const showRightDrawerOpener =
+    isRightDrawerAlwaysCollapsed || isRightDrawerCollapsed
+
+  // theme
   useEffect(() => {
     const darkQuery = window.matchMedia("(prefers-color-scheme: dark)")
 
@@ -65,11 +83,23 @@ export default function Layout({
 
   return isClient ? (
     <GlobalContext.Provider
-      value={{ test: "OK", preferredTheme, setPreferredTheme }}
+      value={{
+        test: "OK",
+
+        preferredTheme,
+        setPreferredTheme,
+
+        showRightDrawerOpener,
+        isRightDrawerOpen,
+        rightDrawerHandler,
+      }}
     >
       <Header
         showLeftDrawerOpener={showLeftDrawerOpener}
         openLeftDrawer={leftDrawerHandler.open}
+        showRightDrawerOpener={showRightDrawerOpener}
+        openRightDrawer={rightDrawerHandler.open}
+        RightDrawerIcon={rightDrawerProps.icon}
       />
 
       {showLeftDrawerOpener ? (
@@ -88,15 +118,33 @@ export default function Layout({
       )}
 
       <main
-        className="bg-bg-0 absolute top-12.5 right-0 bottom-0 overflow-auto transition-colors"
-        style={{
-          left: showLeftDrawerOpener ? "0" : `${320}px`,
-        }}
+        className="bg-bg-0 absolute top-12.5 right-0 bottom-0 overflow-auto px-2.5 transition-colors"
+        style={{ left: showLeftDrawerOpener ? "0" : `${320}px` }}
       >
-        {children}
+        <div>{children}</div>
       </main>
     </GlobalContext.Provider>
   ) : (
     "not on client"
   )
+}
+
+const getRightDrawerProps = (
+  pathname: string,
+): { mediaQuery: string; icon: IconType | null } => {
+  const splitted = pathname.split("/")
+  const length = splitted.length
+
+  if (splitted[1] === "blogs" && length === 2) {
+    // /blogs
+    return { mediaQuery: "(max-width: 1024px)", icon: AiOutlineTags }
+  } else if (splitted[1] === "blogs" && length === 3) {
+    // /blogs/[title]
+    return { mediaQuery: "(max-width: 1024px)", icon: VscListTree }
+  } else if (splitted[1] === "books" && length === 4) {
+    // /books/[title]/[chapter]
+    return { mediaQuery: "(max-width: 1024px)", icon: VscListTree }
+  } else {
+    return { mediaQuery: "(max-width: 0px)", icon: null }
+  }
 }

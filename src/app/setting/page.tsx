@@ -2,7 +2,7 @@
 
 import { addToast } from "@/components/ui/Toaster"
 
-export default function Page() {
+export default function PageSetting() {
   return (
     <div>
       <div>setting page</div>

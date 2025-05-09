@@ -70,7 +70,7 @@ const Portal = ({
 
   return createPortal(
     <div
-      className="absolute inset-0 bg-black/25 backdrop-blur-xs transition-opacity"
+      className="absolute inset-0 overflow-x-hidden bg-black/25 backdrop-blur-xs transition-opacity"
       style={{ opacity }}
       onClick={handleCloseDrawer}
     >
@@ -83,7 +83,7 @@ const Portal = ({
       >
         <header
           className={twMerge(
-            "bg-primary-color flex h-12.5 shrink-0 items-center gap-2.5 px-2.5 text-white",
+            "bg-primary-color flex h-12.5 shrink-0 items-center gap-2.5 px-2.5 text-white transition-colors",
             placement === "left"
               ? "flex-row-reverse justify-end"
               : "flex-row justify-between",
@@ -102,7 +102,7 @@ const Portal = ({
             <VscChromeClose />
           </button>
         </header>
-        <div className="grow overflow-y-auto bg-amber-200">
+        <div className="bg-content-bg grow overflow-y-auto transition-colors">
           {typeof children === "function"
             ? children({ onCloseDrawer: handleCloseDrawer })
             : cloneElement(children as ReactElement<any>, {
