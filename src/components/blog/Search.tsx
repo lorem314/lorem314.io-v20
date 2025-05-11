@@ -25,6 +25,7 @@ export default function Search({
         placeholder="搜索标题..."
         variant="base"
         value={value}
+        autoComplete="off"
         onChange={onChange}
       />
     </section>

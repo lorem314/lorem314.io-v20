@@ -118,6 +118,7 @@ export default function Layout({
       )}
 
       <main
+        id="main"
         className="bg-bg-0 absolute top-12.5 right-0 bottom-0 overflow-auto px-2.5 transition-colors"
         style={{ left: showLeftDrawerOpener ? "0" : `${320}px` }}
       >

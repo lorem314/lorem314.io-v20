@@ -61,7 +61,7 @@ const Header = ({
           )}
           onClick={openRightDrawer}
         >
-          <RiMenu2Line />
+          <RightDrawerIcon />
         </button>
       ) : null}
     </header>

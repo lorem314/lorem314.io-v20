@@ -21,7 +21,7 @@ export default function Layout({
   allBlogPosts: BlogPost[]
   allTags: Tag[]
 }) {
-  const [blogs, setBlogs] = useState(allBlogPosts)
+  const [blogPosts, setBlogPosts] = useState(allBlogPosts)
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
   const [isOrMode, setIsOrMode] = useState(true)
   const [query, setQuery] = useState("")
@@ -60,20 +60,21 @@ export default function Layout({
   }, [])
 
   useEffect(() => {
-    const blogs = allBlogPosts
-      .filter((blog) => {
-        if (debouncedQuery.length === 0) return true
-        const lowercasedSearchTerm = debouncedQuery.toLowerCase()
-        const lowercasedBlogTitle = blog.title.toLowerCase()
-        return lowercasedBlogTitle.includes(lowercasedSearchTerm)
-      })
-      .filter((blog) => {
-        if (selectedTags.length === 0) return true
-        return selectedTags
-          .map((tag) => blog.tags.includes(tag.name))
-          [isOrMode ? "some" : "every"]((b) => b)
-      })
-    setBlogs(blogs)
+    setBlogPosts(
+      allBlogPosts
+        .filter((blogPost) => {
+          if (!debouncedQuery) return true
+          const lowercasedQuery = debouncedQuery.toLowerCase()
+          const lowercasedBlogPostTitle = blogPost.title.toLowerCase()
+          return lowercasedBlogPostTitle.includes(lowercasedQuery)
+        })
+        .filter((blogPost) => {
+          if (selectedTags.length === 0) return true
+          return selectedTags
+            .map((tag) => blogPost.tags.includes(tag.name))
+            [isOrMode ? "some" : "every"]((b) => b)
+        }),
+    )
   }, [debouncedQuery, selectedTags, isOrMode])
 
   return (
@@ -97,7 +98,7 @@ export default function Layout({
         )}
       >
         <h2 className="content-title">博客</h2>
-        <BlogPostList blogPosts={allBlogPosts} />
+        <BlogPostList blogPosts={blogPosts} />
       </section>
 
       {showRightDrawerOpener ? (
@@ -110,7 +111,7 @@ export default function Layout({
         >
           {() => {
             return (
-              <div>
+              <div className="p-2.5">
                 <AllTags
                   allTags={allTags}
                   selectedTags={selectedTags}

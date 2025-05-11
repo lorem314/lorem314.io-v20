@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { twMerge } from "tailwind-merge"
 import { IoCloseSharp } from "react-icons/io5"
 import { FaRegTrashAlt } from "react-icons/fa"
@@ -52,13 +52,11 @@ export default function Select({
     const nodeSelectedTags = refSelectedTags.current
 
     const handleWheel = (event: WheelEvent) => {
-      console.log("wheel")
       if (event.deltaY === 0) return
       nodeSelectedTags?.scrollBy({ left: event.deltaY < 0 ? -12 : 12 })
     }
 
     if (nodeSelectedTags) {
-      console.log("listen to wheel")
       nodeSelectedTags.addEventListener("wheel", handleWheel, { passive: true })
     }
 
@@ -83,10 +81,16 @@ export default function Select({
     [onSelectTag],
   )
 
-  const filteredOptions = options.filter((option) => {
-    if (debouncedQuery === "") return true
-    return option.name.includes(debouncedQuery)
-  })
+  const filteredOptions = useMemo(
+    () =>
+      options.filter((option) => {
+        if (debouncedQuery === "") return true
+        const lowercasedDebouncedQuery = debouncedQuery.toLocaleLowerCase()
+        const lowercasedTagName = option.name.toLocaleLowerCase()
+        return lowercasedTagName.includes(lowercasedDebouncedQuery)
+      }),
+    [debouncedQuery, options],
+  )
 
   // tag input listens to key press event
   useEffect(() => {
@@ -197,7 +201,10 @@ export default function Select({
   return (
     <section className="relative">
       <h2 className="content-title">
-        <label htmlFor="blog-select">筛选标签</label>
+        <label htmlFor="blog-select">
+          筛选标签
+          {selectedTags.length !== 0 ? `(${selectedTags.length})` : null}
+        </label>
       </h2>
 
       <div
@@ -233,19 +240,24 @@ export default function Select({
           variant="goast"
           type="text"
           placeholder="筛选标签..."
+          value={query}
+          autoComplete="off"
           onChange={handleChangeQuery}
           onFocus={() => setIsOpen(true)}
           onClick={(event) => event.stopPropagation()}
         />
 
         <div className="flex items-center">
-          <Button variant="icon" size="small">
+          <Button variant="icon" size="small" onClick={() => setQuery("")}>
+            <IoCloseSharp />
+          </Button>
+          <Button variant="icon" size="small" onClick={clearSelectedTags}>
             <FaRegTrashAlt />
           </Button>
           <Button variant="icon" size="small" onClick={toggleFilterMode}>
             {isOrMode ? <GiLogicGateOr /> : <GiLogicGateAnd />}
           </Button>
-          <Button variant="icon" size="small">
+          <Button variant="icon" size="small" onClick={toggleIsOpen}>
             <FaCaretDown />
           </Button>
         </div>
@@ -262,21 +274,44 @@ export default function Select({
         onClick={(event) => event.stopPropagation()}
         onMouseLeave={handleMouseLeaveOptions}
       >
-        {options.map((option, index) => {
-          return (
-            <li
-              key={option.name}
-              className={twMerge(
-                "flex h-8 cursor-pointer items-center justify-between px-2",
-              )}
-              onMouseEnter={handleMouseEnterOption(index)}
-              onClick={handleSelectTag(option)}
-            >
-              <div>{option.name}</div>
-              <div>{option.count}</div>
-            </li>
-          )
-        })}
+        {filteredOptions.length === 0 ? (
+          <li className="flex h-8 items-center justify-center px-2 opacity-60">
+            没有符合查询的标签...
+          </li>
+        ) : (
+          filteredOptions.map((option, index) => {
+            const parts = option.name.split(new RegExp(`(${query})`, "gi"))
+            const isHovered = index === hoveredIndex
+            const isSelected = selectedTags.includes(option)
+
+            return (
+              <li
+                key={option.name}
+                className={twMerge(
+                  "flex h-8 cursor-pointer items-center justify-between px-2",
+                  isHovered ? "bg-bg-0" : null,
+                  isSelected ? "bg-sky-600 text-white" : null,
+                  isSelected ? "dark:bg-blue-300 dark:text-black" : null,
+                )}
+                onMouseEnter={handleMouseEnterOption(index)}
+                onClick={handleSelectTag(option)}
+              >
+                <div>
+                  {parts.map((part, index) => {
+                    return part.toLocaleLowerCase() === query.toLowerCase() ? (
+                      <span key={index} style={{ color: "red" }}>
+                        {part}
+                      </span>
+                    ) : (
+                      part
+                    )
+                  })}
+                </div>
+                <div>{option.count}</div>
+              </li>
+            )
+          })
+        )}
       </ul>
     </section>
   )
