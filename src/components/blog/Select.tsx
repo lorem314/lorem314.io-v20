@@ -100,6 +100,7 @@ export default function Select({
       if (event.target !== nodeTagInput) return
       switch (event.code) {
         case "Escape":
+          console.log("[Select] pressed Escape")
           setIsOpen(false)
           break
         case "Enter":

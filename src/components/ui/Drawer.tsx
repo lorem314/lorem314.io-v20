@@ -70,12 +70,13 @@ const Portal = ({
 
   return createPortal(
     <div
-      className="absolute inset-0 overflow-x-hidden bg-black/25 backdrop-blur-xs transition-opacity"
+      className="absolute inset-0 cursor-pointer overflow-x-hidden bg-black/25 backdrop-blur-xs transition-opacity"
       style={{ opacity }}
       onClick={handleCloseDrawer}
+      role="button"
     >
       <div
-        className="absolute flex flex-col transition-transform"
+        className="absolute flex cursor-auto flex-col transition-transform"
         style={{ ...positionProps, transform }}
         onClick={(event) => {
           event.stopPropagation()

@@ -1,10 +1,7 @@
+"use client"
+
 import { useState, useRef, useCallback, cloneElement, memo } from "react"
-import type {
-  ReactNode,
-  ReactElement,
-  PropsWithChildren,
-  RefObject,
-} from "react"
+import type { ReactElement, RefObject } from "react"
 import { createPortal } from "react-dom"
 
 import type { Placement } from "@/types"
